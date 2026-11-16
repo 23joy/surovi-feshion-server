@@ -25,6 +25,8 @@ async function startServer() {
     const productCollection = db.collection('dress')
     const shoesCollection = db.collection('shoes')
     const makupCollection = db.collection('makup')
+    const bookingCollection=db.collection('booking')
+  
 
     // dress Collection
 
@@ -57,6 +59,23 @@ async function startServer() {
     app.delete('/dress/:id',async(req,res)=>{
       const id=req.params.id;
       const result=await productCollection.deleteOne({_id:new ObjectId(id)})
+      res.send(result)
+    })
+    app.post('/booking',async(req,res)=>{
+      const data=req.body;
+      const result=await bookingCollection.insertOne(data)
+      res.send(result)
+    })
+    
+    app.get('/booking/:userId',async(req,res)=>{
+      const {userId}=req.params;
+      const result=await bookingCollection.find({userId:userId}).toArray();
+      res.send(result)
+    })
+
+    app.delete('/booking/:bookingId',async(req,res)=>{
+      const {bookingId}=req.params;
+      const result= await bookingCollection.deleteOne({_id: new ObjectId(bookingId)})
       res.send(result)
     })
 
@@ -95,6 +114,7 @@ async function startServer() {
       const result=await shoesCollection.deleteOne({_id:new ObjectId(id)})
       res.send(result)
     })
+
 
     // Makeup collection
     app.get('/makup', async (req, res) => {
